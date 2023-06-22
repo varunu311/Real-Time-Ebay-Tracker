@@ -75,11 +75,31 @@ function addItemToStorage(item) {
   });
 }
 
+// actual check items function, below this function is the loop that runs it
+
+function queryItems(items){
+  items.forEach(function(item, index, arr){ // loop through each item
+    // TODO perform query here
+  })
+}
+
 // loop every minute
 chrome.alarms.create("query", { delayInMinutes: 1, periodInMinutes: 1 });
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
     if (alarm.name === "query") {
-        
+      var itemList = null
+
+      chrome.storage.local.get(['items'], function(result) {
+        if (result.items === undefined) {
+          result.items = [];
+        }
+        console.log('List currently is ' + JSON.stringify(result.items));
+
+        itemList = result.items
+
+        queryItems(itemList)
+
+      });
     }
 });
