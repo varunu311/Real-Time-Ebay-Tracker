@@ -5,7 +5,9 @@
   "permissions": ["tabs", 
     "http://*/*", 
     "https://*/*", 
-    "storage"],
+    "storage",
+    "alarms"
+  ],
   "background": {
     "scripts": ["background.js"],
     "persistent": false

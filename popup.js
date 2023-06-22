@@ -73,6 +73,13 @@ function addItemToStorage(item) {
     });
 
   });
-
-  
 }
+
+// loop every minute
+chrome.alarms.create("query", { delayInMinutes: 1, periodInMinutes: 1 });
+
+chrome.alarms.onAlarm.addListener(function(alarm) {
+    if (alarm.name === "query") {
+        
+    }
+});
