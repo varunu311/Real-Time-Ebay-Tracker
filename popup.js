@@ -25,3 +25,25 @@ searchButton.addEventListener("click", function() {
   console.log(htmldata);
 
 });
+
+function addItemToStorage(item) { // add item to local storage. Items are {"keywords" : "string", "price" : 1.00}
+  var itemList = null
+
+  chrome.storage.local.get(['items'], function(result) {
+    if (result.items === undefined) {
+      // Set default value
+      result.items = [];
+    }
+    console.log('List currently is ' + JSON.stringify(result.items));
+
+    itemList = result.items
+    itemList.push(item)
+
+    chrome.storage.local.set({items: itemList}, function() {
+      console.log('Items updated');
+    });
+
+  });
+
+  
+}
