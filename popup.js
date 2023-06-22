@@ -16,26 +16,28 @@ searchButton.addEventListener("click", function() {
     var parser = new DOMParser();
     var doc = parser.parseFromString(html, 'text/html');
     var fullHTML = doc.documentElement.outerHTML;
-    console.log(fullHTML);
   })
   .catch(error => {
     console.log('Error:', error);
   });
 
-  console.log("Search Term: " + searchTerm);
-  console.log("Excluded Words: " + excludedWords);
-  console.log("Max Price: " + maxPrice);
-  console.log("Url: "+newUrl)
-  console.log(htmldata);
+  var resultsDiv = document.getElementById("results");
+  var newItem = document.createElement("p");
+  newItem.textContent = newUrl;
+  resultsDiv.appendChild(newItem);
+
+  console.log("New Url: "+ newUrl);
+
+  
+  
 
 });
 
-function addItemToStorage(item) { // add item to local storage. Items are {"keywords" : "string", "price" : 1.00}
+function addItemToStorage(item) { 
   var itemList = null
 
   chrome.storage.local.get(['items'], function(result) {
     if (result.items === undefined) {
-      // Set default value
       result.items = [];
     }
     console.log('List currently is ' + JSON.stringify(result.items));
