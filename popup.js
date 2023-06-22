@@ -5,6 +5,11 @@ searchButton.addEventListener("click", function() {
   var excludedWords = document.getElementById("search_exclude_term").value;
   var maxPrice = document.getElementById("search_term_maxprice").value;
 
+  let keywordString = searchTerm.replace(/ /g, "+");
+  let blacklistKeywordString = excludeWords.replace(/ /g, "+");
+  
+  var newUrl = "https://www.ebay.com/sch/i.html?_nkw=" + keywordString + "&_ex_kw=" + blacklistKeywordString + "&LH_BIN=1&_sop=10&_dmd=1&_ipg=240&rt=nc&_udhi=" + toString(maxPrice)
+
   var url = "https://www.ebay.com/sch/i.html?_nkw=iphone+13+pro&_ex_kw=case&LH_BIN=1&_sop=10&_dmd=1&_ipg=240&rt=nc&_udhi=8"
   
   var htmldata = fetch(url)
