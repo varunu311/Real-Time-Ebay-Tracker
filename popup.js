@@ -1,18 +1,27 @@
-const searchButton = document.getElementById('searchButton');
+var searchButton = document.getElementById("searchButton");
 
+searchButton.addEventListener("click", function() {
+  var searchTerm = document.getElementById("search_term").value;
+  var excludedWords = document.getElementById("search_exclude_term").value;
+  var maxPrice = document.getElementById("search_term_maxprice").value;
 
-searchButton.addEventListener('click', search);
-
-function search() {
-  const excludeTermInput = document.getElementById('search_exclude_term');
-  const maxprice = document.getElementById('searc_term_maxprice');
-  const searchTermInput = document.getElementById('search_term');
-
-  const htmldata = fetch('https://www.ebay.com/sch/i.html?_nkw=iphone+13+pro&_ex_kw=case&LH_BIN=1&_sop=10&_dmd=1&_ipg=240');
+  var url = "https://www.ebay.com/sch/i.html?_nkw=iphone+13+pro&_ex_kw=case&LH_BIN=1&_sop=10&_dmd=1&_ipg=240&rt=nc&_udhi=8"
   
-  console.log("Button Clicked");
-  console.log(excludeTermInput);
-  console.log(maxprice);
-  console.log(searchTermInput);
+  var htmldata = fetch(url)
+  .then(response => response.text())
+  .then(html => {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, 'text/html');
+    var fullHTML = doc.documentElement.outerHTML;
+    console.log(fullHTML);
+  })
+  .catch(error => {
+    console.log('Error:', error);
+  });
 
-}
+  console.log("Search Term: " + searchTerm);
+  console.log("Excluded Words: " + excludedWords);
+  console.log("Max Price: " + maxPrice);
+  console.log(htmldata);
+
+});
