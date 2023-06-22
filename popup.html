@@ -40,15 +40,34 @@
       label{
         color: rgb(211, 211, 211);
       }
+
+      #results {
+        margin-top: 20px;
+      }
+
+      .result {
+        background-color: rgb(211, 211, 211);
+        padding: 10px;
+        margin-bottom: 10px;
+        color: rgb(4, 27, 42);
+      }
     </style>
   </head>
   <body>
-    <h1>eBay Price Tracker</h1>
+    <h1>eBay Search</h1>
 
-    <label for="ebay_item">Item:</label>
-    <input type="text" id="ebay_item" name="ebay_item">
+    <label for="search_term">Search Item:</label>
+    <input type="text" id="search_term" name="search_term">
+
+    <label for="search_exclude_term">Ex Words:</label>
+    <input type="int" id="search_exclude_term" name="search_exclude_term">
+
+    <label for="search_maxprice">Max Price:</label>
+    <input type="int" id="search_term_maxprice" name="search_term_maxprice">
     
-    <button id="trackButton">Track Item</button>
+    <button id="searchButton">Search</button>
+
+    <div id="results"></div>
 
     <script src="popup.js"></script>
   </body>
