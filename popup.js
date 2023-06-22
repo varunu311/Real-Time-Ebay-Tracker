@@ -34,26 +34,23 @@ searchButton.addEventListener("click", function() {
     for (var i = 0; i < itemprice.length; i++) {
       var value = itemprice[i].textContent;
       priceArray.push(value);
-    }
-
-    console.log(hrefArray);
-    console.log(priceArray);
-
-  })
-  .catch(error => {
-    console.log('Error:', error);
-  });
+    }}).catch(error => {console.log('Error:', error);});
 
 
-  var resultsDiv = document.getElementById("results");
-  var newItem = document.createElement("p");
-  newItem.textContent = newUrl;
-  resultsDiv.appendChild(newItem);
+  for (let i = 0; i < priceArray.length; i++) {
+    var temp = priceArray[i];
+    console.log(temp);
+  }
+
+  for (let i = 0; i < hrefArray.length; i++) {
+    var temp = hrefArray[i];
+    console.log(temp);
+  }
 
   console.log("New Url: "+ newUrl);
+  // console.log(hrefArray);
+  // console.log(priceArray);
   
-  
-
 });
 
 function addItemToStorage(item) { 
