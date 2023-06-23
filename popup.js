@@ -12,48 +12,39 @@ searchButton.addEventListener("click", function() {
 
   console.log("New Url: "+ newUrl);
 
-  addItemToStorage(newUrl);
+  addLinkToStorage(newUrl);
   
 });
 
-function addItemToStorage(item) {
+function addLinkToStorage(link) {
   var Array = [];
 
+  // Check if storage array exists in local storage
   var storedArray = localStorage.getItem('Array');
-
   if (storedArray) {
     Array = JSON.parse(storedArray);
+    
+    // Append the item to the cloud storage array
     Array.push(item);
+
+    // Store the updated array in local storage
     localStorage.setItem('Array', JSON.stringify(Array));
   }
-  else{
-    localStorage.setItem('Array',JSON.stringify([]))
+  if (index >= 0 && index < Array.length){
+    Array.splice(index, 1);
+
+    localStorage.setItem('items', JSON.stringify(Array));
   }
 
-  var items = JSON.parse(localStorage.getItem('Array'));
-  queryItems(items);
+  console.log(localStorage.getItem('Array'));
 }
 
 // actual check items function, below this function is the loop that runs it
+
 function queryItems(items){
-  for (var item of items) {
-    var hrefArray = [];
-
-    fetch(item)
-    .then(response => response.text())
-    .then(html => {
-      var parser = new DOMParser();
-      var doc = parser.parseFromString(html, 'text/html');
-      var itemlink = doc.getElementsByClassName('s-item__link');
-
-      console.log("ItemLink Length: " + itemlink.length);
-
-      for (var i = 0; i < itemlink.length; i++) {
-        var href = itemlink[i].getAttribute('href');
-        hrefArray.push(href);
-      }
-    })
-  }
+  items.forEach(function(item, index, arr){ // loop through each item
+    // TODO perform query here
+  })
 }
 
 // loop every minute
@@ -71,7 +62,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 
         itemList = result.items
 
-        queryItems(itemList)
+        queryLinks(itemList)
 
       });
     }
