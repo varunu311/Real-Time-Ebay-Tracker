@@ -12,36 +12,51 @@ searchButton.addEventListener("click", function() {
 
   console.log("New Url: "+ newUrl);
 
-  addItemToStorage(newUrl);
+  addLinkToStorage(newUrl);
   
 });
 
-function addItemToStorage(item) {
+function addLinkToStorage(link) {
   var Array = [];
 
   // Check if storage array exists in local storage
-  var storedArray = localStorage.getItem('Array');
+  var storedArray = localStorage.getItem('items');
   if (storedArray) {
     // Parse the stored array if it exists
     Array = JSON.parse(storedArray);
-    
-    // Append the item to the cloud storage array
-    Array.push(item);
 
-    // Store the updated array in local storage
-    localStorage.setItem('Array', JSON.stringify(Array));
   }
-  else{
-    localStorage.setItem('Array',JSON.stringify([]))
-  }
+ 
+  // Append the item to the cloud storage array
+  Array.push(link);
 
-  console.log(localStorage.getItem('Array'));
+  // Store the updated array in local storage
+  localStorage.setItem('items', JSON.stringify(Array));
+
+  console.log(localStorage.getItem('items'));
 }
 
-// actual check items function, below this function is the loop that runs it
+function removeLinkFromStorage(index) { // we get the index from the data of which button they clicked on
+  var Array = [];
 
-function queryItems(items){
-  items.forEach(function(item, index, arr){ // loop through each item
+  // Check if storage array exists in local storage
+  var storedArray = localStorage.getItem('items');
+  if (storedArray) {
+    // Parse the stored array if it exists
+    Array = JSON.parse(storedArray);
+  }
+  if (index >= 0 && index < Array.length){
+    Array.splice(index, 1);
+
+    localStorage.setItem('items', JSON.stringify(Array));
+  }
+  
+}
+
+// actual check links function, below this function is the loop that runs it
+
+function queryLinks(links){
+  links.forEach(function(link, index, arr){ // loop through each item
     // TODO perform query here
   })
 }
@@ -61,7 +76,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 
         itemList = result.items
 
-        queryItems(itemList)
+        queryLinks(itemList)
 
       });
     }
