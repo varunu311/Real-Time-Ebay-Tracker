@@ -37,23 +37,23 @@ function addItemToStorage(item) {
 // actual check items function, below this function is the loop that runs it
 function queryItems(items){
   for (var item of items) {
-  var hrefArray = [];
+    var hrefArray = [];
 
-  var htmldata = fetch(item)
-  .then(response => response.text())
-  .then(html => {
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(html, 'text/html');
-    var itemlink = doc.getElementsByClassName('s-item__link');
+    fetch(item)
+    .then(response => response.text())
+    .then(html => {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      var itemlink = doc.getElementsByClassName('s-item__link');
 
-    console.log("ItemLink Length: " + itemlink.length);
+      console.log("ItemLink Length: " + itemlink.length);
 
-    for (var i = 0; i < itemlink.length; i++) {
-      var href = itemlink[i].getAttribute('href');
-      hrefArray.push(href);
-    }
-  })
-}
+      for (var i = 0; i < itemlink.length; i++) {
+        var href = itemlink[i].getAttribute('href');
+        hrefArray.push(href);
+      }
+    })
+  }
 }
 
 // loop every minute
