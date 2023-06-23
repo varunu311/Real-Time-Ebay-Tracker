@@ -10,60 +10,67 @@ searchButton.addEventListener("click", function() {
   
   var newUrl = "https://www.ebay.com/sch/i.html?_nkw=" + keywordString + "&_ex_kw=" + blacklistKeywordString + "&LH_BIN=1&_sop=10&_dmd=1&_ipg=240&rt=nc&_udhi=" + toString(maxPrice)
 
-  console.log("New Url: "+ newUrl);
-
   addLinkToStorage(newUrl);
   
 });
 
 function addLinkToStorage(link) {
   var Array = [];
-
-  // Check if storage array exists in local storage
   var storedArray = localStorage.getItem('Array');
+
   if (storedArray) {
     Array = JSON.parse(storedArray);
-    
-    // Append the item to the cloud storage array
-    Array.push(item);
-
-    // Store the updated array in local storage
+    Array.push(link);
     localStorage.setItem('Array', JSON.stringify(Array));
+  }
+  else{
+    localStorage.setItem('Array',JSON.stringify([]))
+  }
+
+  var links = JSON.parse(localStorage.getItem('Array'));
+
+  queryItems(links);
+}
+
+
+function removeLinkFromStorage(index) { // we get the index from the data of which button they clicked on
+  var Array = [];
+
+  var storedArray = localStorage.getItem('items');
+  if (storedArray) {
+    Array = JSON.parse(storedArray);
   }
   if (index >= 0 && index < Array.length){
     Array.splice(index, 1);
-
     localStorage.setItem('items', JSON.stringify(Array));
   }
-
-  console.log(localStorage.getItem('Array'));
+  
 }
 
-// actual check items function, below this function is the loop that runs it
+function queryItems(links){
 
-function queryItems(items){
-  items.forEach(function(item, index, arr){ // loop through each item
-    // TODO perform query here
-  })
-}
+  for (var link of links) {
+  
+  var hrefArray = [];
+  
+  fetch(link)
+  .then(response => response.text())
+  .then(html => {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, 'text/html');
+    var itemlink = doc.getElementsByClassName('s-item__link');
+  
+    console.log("ItemLink Length: " + itemlink.length);
 
-// loop every minute
-chrome.alarms.create("query", { delayInMinutes: 1, periodInMinutes: 1 });
-
-chrome.alarms.onAlarm.addListener(function(alarm) {
-    if (alarm.name === "query") {
-      var itemList = null
-
-      chrome.storage.local.get(['items'], function(result) {
-        if (result.items === undefined) {
-          result.items = [];
-        }
-        console.log('List currently is ' + JSON.stringify(result.items));
-
-        itemList = result.items
-
-        queryLinks(itemList)
-
-      });
+    for (var i = 0; i < itemlink.length; i++) {
+      var href = itemlink[i].getAttribute('href');
+      hrefArray.push(href);
     }
-});
+
+    console.log(hrefArray);
+  })
+  .catch(error => {
+    console.log('Error:', error);
+  });
+}
+}
