@@ -1,7 +1,13 @@
+refresh();
+
 var searchButton = document.getElementById("searchButton");
 var clearButton = document.getElementById("clearButton");
+var refreshButton = document.getElementById("refreshButton");
 
 searchButton.addEventListener("click", function() {
+  var parentDiv = document.querySelector('.results');
+  parentDiv.innerHTML = '';
+
   var searchTerm = document.getElementById("search_term").value;
   var excludedWords = document.getElementById("search_exclude_term").value;
   var maxPrice = document.getElementById("search_term_maxprice").value;
@@ -21,6 +27,13 @@ clearButton.addEventListener("click", function(){
   parentDiv.innerHTML = '';
 });
 
+refreshButton.addEventListener("click", function(){
+  var parentDiv = document.querySelector('.results');
+  parentDiv.innerHTML = '';
+  refresh();
+
+});
+
 function addLinkToStorage(link) {
   
   var Array = [];
@@ -32,7 +45,12 @@ function addLinkToStorage(link) {
     localStorage.setItem('Array', JSON.stringify(Array));
   }
   else{
-    localStorage.setItem('Array',JSON.stringify([]))
+    localStorage.setItem('Array',JSON.stringify([]));
+    storedArray = localStorage.getItem('Array');
+    Array = JSON.parse(storedArray);
+    Array.push(link);
+    localStorage.setItem('Array',JSON.stringify(Array));
+
   }
 
   var links = JSON.parse(localStorage.getItem('Array'));
@@ -60,6 +78,8 @@ function queryItems(links){
 
   for (var link of links) {
   var hrefArray = [];
+  var parentElement = document.getElementById('results');
+  var itemDiv = document.createElement('div');
   
   fetch(link)
   .then(response => response.text())
@@ -78,37 +98,44 @@ function queryItems(links){
       itemNameArray.push(itemName);
     }
 
+    var paragraphElement = document.createElement('p');
+
     for(var i = 0; i < 10; i++){
       href = hrefArray[i];
       itemName = itemNameClass[i].textContent;
 
-      var parentElement = document.getElementById('results');
-      var paragraphElement = document.createElement('p');
       var linkElement = document.createElement('a');
       
       linkElement.setAttribute('href', href);
       linkElement.textContent = itemName;
 
       paragraphElement.appendChild(linkElement);
-      parentElement.appendChild(paragraphElement);
-
-      console.log("Item Name: " + itemName);
-      console.log("href: " + href);
+      //console.log("Item Name: " + itemName);
+      //console.log("href: " + href);
     }
+
+    itemDiv.appendChild(paragraphElement);
 
   })
   .catch(error => {});
-}
 
-console.log("Total Links Tracking: "+ (parseInt(links.length) + parseInt(1)));
+  parentElement.appendChild(itemDiv);
+
+}
+console.log("Total Links Tracking: "+ (parseInt(links.length)));
 
 }
 
 function refresh(){
   var links = JSON.parse(localStorage.getItem('Array'));
 
+  var parentDiv = document.querySelector('.results');
+  parentDiv.innerHTML = '';
+
   for (var link of links) {
     var hrefArray = [];
+    var parentElement = document.getElementById('results');
+    var itemDiv = document.createElement('div');
     
     fetch(link)
     .then(response => response.text())
@@ -116,20 +143,43 @@ function refresh(){
       var parser = new DOMParser();
       var doc = parser.parseFromString(html, 'text/html');
       var itemlink = doc.getElementsByClassName('s-item__link');
-      
+      var itemNameClass = doc.getElementsByClassName('s-item__title');
+  
+      var itemNameArray = [];
+    
       for (var i = 0; i < itemlink.length; i++) {
+        itemName = itemNameClass[i].textContent;
         var href = itemlink[i].getAttribute('href');
         hrefArray.push(href);
+        itemNameArray.push(itemName);
       }
+  
+      var paragraphElement = document.createElement('p');
+  
+      for(var i = 0; i < 10; i++){
+        href = hrefArray[i];
+        itemName = itemNameClass[i].textContent;
+  
+        var linkElement = document.createElement('a');
+        
+        linkElement.setAttribute('href', href);
+        linkElement.textContent = itemName;
+  
+        paragraphElement.appendChild(linkElement);
+        //console.log("Item Name: " + itemName);
+        //console.log("href: " + href);
+      }
+  
+      itemDiv.appendChild(paragraphElement);
+  
     })
-    .catch(error => {
-      console.log('Error:', error);
-    });
-
+    .catch(error => {});
+  
+    parentElement.appendChild(itemDiv);
+  
   }
-  console.log("Total Links Tracking: "+ (parseInt(links.length) + parseInt(1)));
-
-  console.log("Refreshed");
+  
+  console.log("Total Links Tracking: "+ (parseInt(links.length)));
 }
 
-setInterval(refresh, 10000);
+setInterval(refresh, 60000);
