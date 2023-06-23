@@ -67,25 +67,40 @@ function queryItems(links){
     var parser = new DOMParser();
     var doc = parser.parseFromString(html, 'text/html');
     var itemlink = doc.getElementsByClassName('s-item__link');
+    var itemNameClass = doc.getElementsByClassName('s-item__title');
+
+    var itemNameArray = [];
   
     for (var i = 0; i < itemlink.length; i++) {
+      itemName = itemNameClass[i].textContent;
       var href = itemlink[i].getAttribute('href');
       hrefArray.push(href);
+      itemNameArray.push(itemName);
     }
 
     for(var i = 0; i < 10; i++){
+      href = hrefArray[i];
+      itemName = itemNameClass[i].textContent;
+
       var parentElement = document.getElementById('results');
-      var newElement = document.createElement('p');
-      newElement.textContent = href;
-      parentElement.appendChild(newElement);
+      var paragraphElement = document.createElement('p');
+      var linkElement = document.createElement('a');
+      
+      linkElement.setAttribute('href', href);
+      linkElement.textContent = itemName;
+
+      paragraphElement.appendChild(linkElement);
+      parentElement.appendChild(paragraphElement);
+
+      console.log("Item Name: " + itemName);
+      console.log("href: " + href);
     }
 
   })
-  .catch(error => {
-  });
+  .catch(error => {});
 }
 
-console.log("Total Links Tracking: "+ (parseInt(links.length)));
+console.log("Total Links Tracking: "+ (parseInt(links.length) + parseInt(1)));
 
 }
 
@@ -112,7 +127,7 @@ function refresh(){
     });
 
   }
-  console.log("Total Links Tracking: "+ (parseInt(links.length)));
+  console.log("Total Links Tracking: "+ (parseInt(links.length) + parseInt(1)));
 
   console.log("Refreshed");
 }
