@@ -1,4 +1,5 @@
 var searchButton = document.getElementById("searchButton");
+var clearButton = document.getElementById("clearButton");
 
 searchButton.addEventListener("click", function() {
   var searchTerm = document.getElementById("search_term").value;
@@ -14,7 +15,14 @@ searchButton.addEventListener("click", function() {
   
 });
 
+clearButton.addEventListener("click", function(){
+  localStorage.clear();
+  var parentDiv = document.querySelector('.results');
+  parentDiv.innerHTML = '';
+});
+
 function addLinkToStorage(link) {
+  
   var Array = [];
   var storedArray = localStorage.getItem('Array');
 
@@ -33,7 +41,8 @@ function addLinkToStorage(link) {
 }
 
 
-function removeLinkFromStorage(index) { // we get the index from the data of which button they clicked on
+function removeLinkFromStorage(index) {
+
   var Array = [];
 
   var storedArray = localStorage.getItem('items');
@@ -50,7 +59,6 @@ function removeLinkFromStorage(index) { // we get the index from the data of whi
 function queryItems(links){
 
   for (var link of links) {
-  
   var hrefArray = [];
   
   fetch(link)
@@ -60,17 +68,53 @@ function queryItems(links){
     var doc = parser.parseFromString(html, 'text/html');
     var itemlink = doc.getElementsByClassName('s-item__link');
   
-    console.log("ItemLink Length: " + itemlink.length);
-
     for (var i = 0; i < itemlink.length; i++) {
       var href = itemlink[i].getAttribute('href');
       hrefArray.push(href);
     }
 
-    console.log(hrefArray);
+    for(var i = 0; i < 10; i++){
+      var parentElement = document.getElementById('results');
+      var newElement = document.createElement('p');
+      newElement.textContent = href;
+      parentElement.appendChild(newElement);
+    }
+
   })
   .catch(error => {
-    console.log('Error:', error);
   });
 }
+
+console.log("Total Links Tracking: "+ (parseInt(links.length)));
+
 }
+
+function refresh(){
+  var links = JSON.parse(localStorage.getItem('Array'));
+
+  for (var link of links) {
+    var hrefArray = [];
+    
+    fetch(link)
+    .then(response => response.text())
+    .then(html => {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      var itemlink = doc.getElementsByClassName('s-item__link');
+      
+      for (var i = 0; i < itemlink.length; i++) {
+        var href = itemlink[i].getAttribute('href');
+        hrefArray.push(href);
+      }
+    })
+    .catch(error => {
+      console.log('Error:', error);
+    });
+
+  }
+  console.log("Total Links Tracking: "+ (parseInt(links.length)));
+
+  console.log("Refreshed");
+}
+
+setInterval(refresh, 10000);
