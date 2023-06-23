@@ -1,39 +1,49 @@
 <!DOCTYPE html>
-<html>
-  
-  <head> 
-  <link rel="stylesheet" href="popup.css">
-  </head>
-  
-  <body>
+<html lang="en">
 
-    <!-- header -->
-    <h1>eBay</h1>
+<head>
+    <link rel="stylesheet" href="popup.css">
+    <title>eBay New Listing Finder</title>
+</head>
 
-    <!-- begin form -->
-    <div id="inputs">
-    
-      <!-- item search -->
-      <label for="search_term">Item Search</label><br>
-      <input type="text" id="search_term" name="search_term" placeholder="Search for your item">
-    
-      <!-- exlusion search -->
-      <label for="search_exclude_term">Exclude these words</label></br>
-      <input type="text" id="search_exclude_term" name="search_exclude_term" placeholder="Exlude these words">
+<body>
 
-      <!-- max price -->
-      <label for="search_term_maxprice">Maximum Price</label>
-      <input type="text" id="search_term_maxprice" name="search_term_maxprice" placeholder="Enter your maximum price">
+<!-- header -->
+<h1>eBay New Listing Finder</h1>
 
-      <!-- buttons -->
-      <button id="searchButton">Search</button>
-      <button id="refreshButton">Refresh</button>
-      <button id="clearButton">Clear</button>
-    
+<!-- begin form -->
+<div id="inputs">
+
+    <!-- item search -->
+    <div class="tooltip">
+        <label for="search_term">Item search:</label><br>
+        <input type="text" id="search_term" name="search_term" placeholder="Search for your item" required><br>
+        <span class="tooltiptext">type the important words, put exact words in quotes: airpods, "apple watch"</span>
     </div>
 
-    <div class="results" id="results"></div>
+    <!-- exlusion search -->
+    <div class="tooltip">
+        <label for="search_exclude_term">None of these words:</label><br>
+        <input type="text" id="search_exclude_term" name="search_exclude_term" placeholder="Exlude these words" required><br>
+        <span class="tooltiptext">put a minus sign before words you don't want: -poster, -case</span>
+    </div>
 
-    <script src="popup.js"></script>
-  </body>
+    <!-- max price -->
+    <div class="tooltip">
+        <label for="search_term_maxprice">Maximum price:</label><br>
+        <input type="number" id="search_term_maxprice" name="search_term_maxprice" min="0.01" step="0.01" value="0.01" required><br>
+        <span class="tooltiptext">enter your maximum price</span>
+    </div>
+
+    <!-- buttons -->
+    <br><button id="searchButton">Search</button>
+    <button id="refreshButton">Refresh</button>
+    <button id="clearButton">Clear</button>
+
+</div>
+
+<div class="results" id="results"></div>
+
+<script src="popup.js"></script>
+</body>
 </html>
