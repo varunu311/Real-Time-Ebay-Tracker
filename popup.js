@@ -1,6 +1,13 @@
+refresh();
+
 var searchButton = document.getElementById("searchButton");
+var clearButton = document.getElementById("clearButton");
+var refreshButton = document.getElementById("refreshButton");
 
 searchButton.addEventListener("click", function() {
+  var parentDiv = document.querySelector('.results');
+  parentDiv.innerHTML = '';
+
   var searchTerm = document.getElementById("search_term").value;
   var excludedWords = document.getElementById("search_exclude_term").value;
   var maxPrice = document.getElementById("search_term_maxprice").value;
@@ -10,74 +17,169 @@ searchButton.addEventListener("click", function() {
   
   var newUrl = "https://www.ebay.com/sch/i.html?_nkw=" + keywordString + "&_ex_kw=" + blacklistKeywordString + "&LH_BIN=1&_sop=10&_dmd=1&_ipg=240&rt=nc&_udhi=" + toString(maxPrice)
 
-  console.log("New Url: "+ newUrl);
-
   addLinkToStorage(newUrl);
   
 });
 
-function addLinkToStorage(link) {
-  var Array = [];
+clearButton.addEventListener("click", function(){
+  localStorage.clear();
+  var parentDiv = document.querySelector('.results');
+  parentDiv.innerHTML = '';
+});
 
-  // Check if storage array exists in local storage
-  var storedArray = localStorage.getItem('items');
+refreshButton.addEventListener("click", function(){
+  var parentDiv = document.querySelector('.results');
+  parentDiv.innerHTML = '';
+  refresh();
+
+});
+
+function addLinkToStorage(link) {
+  
+  var Array = [];
+  var storedArray = localStorage.getItem('Array');
+
   if (storedArray) {
-    // Parse the stored array if it exists
     Array = JSON.parse(storedArray);
+    Array.push(link);
+    localStorage.setItem('Array', JSON.stringify(Array));
+  }
+  else{
+    localStorage.setItem('Array',JSON.stringify([]));
+    storedArray = localStorage.getItem('Array');
+    Array = JSON.parse(storedArray);
+    Array.push(link);
+    localStorage.setItem('Array',JSON.stringify(Array));
 
   }
- 
-  // Append the item to the cloud storage array
-  Array.push(link);
 
-  // Store the updated array in local storage
-  localStorage.setItem('items', JSON.stringify(Array));
+  var links = JSON.parse(localStorage.getItem('Array'));
 
-  console.log(localStorage.getItem('items'));
+  queryItems(links);
 }
 
-function removeLinkFromStorage(index) { // we get the index from the data of which button they clicked on
+
+function removeLinkFromStorage(index) {
+
   var Array = [];
 
-  // Check if storage array exists in local storage
   var storedArray = localStorage.getItem('items');
   if (storedArray) {
-    // Parse the stored array if it exists
     Array = JSON.parse(storedArray);
   }
   if (index >= 0 && index < Array.length){
     Array.splice(index, 1);
-
     localStorage.setItem('items', JSON.stringify(Array));
   }
   
 }
 
-// actual check links function, below this function is the loop that runs it
+function queryItems(links){
 
-function queryLinks(links){
-  links.forEach(function(link, index, arr){ // loop through each item
-    // TODO perform query here
+  for (var link of links) {
+  var hrefArray = [];
+  var parentElement = document.getElementById('results');
+  var itemDiv = document.createElement('div');
+  
+  fetch(link)
+  .then(response => response.text())
+  .then(html => {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, 'text/html');
+    var itemlink = doc.getElementsByClassName('s-item__link');
+    var itemNameClass = doc.getElementsByClassName('s-item__title');
+
+    var itemNameArray = [];
+  
+    for (var i = 0; i < itemlink.length; i++) {
+      itemName = itemNameClass[i].textContent;
+      var href = itemlink[i].getAttribute('href');
+      hrefArray.push(href);
+      itemNameArray.push(itemName);
+    }
+
+    var paragraphElement = document.createElement('p');
+
+    for(var i = 0; i < 10; i++){
+      href = hrefArray[i];
+      itemName = itemNameClass[i].textContent;
+
+      var linkElement = document.createElement('a');
+      
+      linkElement.setAttribute('href', href);
+      linkElement.textContent = itemName;
+
+      paragraphElement.appendChild(linkElement);
+      //console.log("Item Name: " + itemName);
+      //console.log("href: " + href);
+    }
+
+    itemDiv.appendChild(paragraphElement);
+
   })
+  .catch(error => {});
+
+  parentElement.appendChild(itemDiv);
+
+}
+console.log("Total Links Tracking: "+ (parseInt(links.length)));
+
 }
 
-// loop every minute
-chrome.alarms.create("query", { delayInMinutes: 1, periodInMinutes: 1 });
+function refresh(){
+  var links = JSON.parse(localStorage.getItem('Array'));
 
-chrome.alarms.onAlarm.addListener(function(alarm) {
-    if (alarm.name === "query") {
-      var itemList = null
+  var parentDiv = document.querySelector('.results');
+  parentDiv.innerHTML = '';
 
-      chrome.storage.local.get(['items'], function(result) {
-        if (result.items === undefined) {
-          result.items = [];
-        }
-        console.log('List currently is ' + JSON.stringify(result.items));
+  for (var link of links) {
+    var hrefArray = [];
+    var parentElement = document.getElementById('results');
+    var itemDiv = document.createElement('div');
+    
+    fetch(link)
+    .then(response => response.text())
+    .then(html => {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      var itemlink = doc.getElementsByClassName('s-item__link');
+      var itemNameClass = doc.getElementsByClassName('s-item__title');
+  
+      var itemNameArray = [];
+    
+      for (var i = 0; i < itemlink.length; i++) {
+        itemName = itemNameClass[i].textContent;
+        var href = itemlink[i].getAttribute('href');
+        hrefArray.push(href);
+        itemNameArray.push(itemName);
+      }
+  
+      var paragraphElement = document.createElement('p');
+  
+      for(var i = 0; i < 10; i++){
+        href = hrefArray[i];
+        itemName = itemNameClass[i].textContent;
+  
+        var linkElement = document.createElement('a');
+        
+        linkElement.setAttribute('href', href);
+        linkElement.textContent = itemName;
+  
+        paragraphElement.appendChild(linkElement);
+        //console.log("Item Name: " + itemName);
+        //console.log("href: " + href);
+      }
+  
+      itemDiv.appendChild(paragraphElement);
+  
+    })
+    .catch(error => {});
+  
+    parentElement.appendChild(itemDiv);
+  
+  }
+  
+  console.log("Total Links Tracking: "+ (parseInt(links.length)));
+}
 
-        itemList = result.items
-
-        queryLinks(itemList)
-
-      });
-    }
-});
+setInterval(refresh, 60000);
