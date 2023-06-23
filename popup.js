@@ -19,31 +19,41 @@ searchButton.addEventListener("click", function() {
 function addItemToStorage(item) {
   var Array = [];
 
-  // Check if storage array exists in local storage
   var storedArray = localStorage.getItem('Array');
-  if (storedArray) {
-    // Parse the stored array if it exists
-    Array = JSON.parse(storedArray);
-    
-    // Append the item to the cloud storage array
-    Array.push(item);
 
-    // Store the updated array in local storage
+  if (storedArray) {
+    Array = JSON.parse(storedArray);
+    Array.push(item);
     localStorage.setItem('Array', JSON.stringify(Array));
   }
   else{
     localStorage.setItem('Array',JSON.stringify([]))
   }
 
-  console.log(localStorage.getItem('Array'));
+  var items = JSON.parse(localStorage.getItem('Array'));
+  queryItems(items);
 }
 
 // actual check items function, below this function is the loop that runs it
-
 function queryItems(items){
-  items.forEach(function(item, index, arr){ // loop through each item
-    // TODO perform query here
+  for (var item of items) {
+  var hrefArray = [];
+
+  var htmldata = fetch(item)
+  .then(response => response.text())
+  .then(html => {
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, 'text/html');
+    var itemlink = doc.getElementsByClassName('s-item__link');
+
+    console.log("ItemLink Length: " + itemlink.length);
+
+    for (var i = 0; i < itemlink.length; i++) {
+      var href = itemlink[i].getAttribute('href');
+      hrefArray.push(href);
+    }
   })
+}
 }
 
 // loop every minute
