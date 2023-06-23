@@ -10,66 +10,32 @@ searchButton.addEventListener("click", function() {
   
   var newUrl = "https://www.ebay.com/sch/i.html?_nkw=" + keywordString + "&_ex_kw=" + blacklistKeywordString + "&LH_BIN=1&_sop=10&_dmd=1&_ipg=240&rt=nc&_udhi=" + toString(maxPrice)
 
-  
-  var hrefArray = [];
-  var priceArray = [];
-
-  var htmldata = fetch(newUrl)
-  .then(response => response.text())
-  .then(html => {
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(html, 'text/html');
-
-    var itemlink = doc.getElementsByClassName('s-item__link');
-    var itemprice = doc.getElementsByClassName('s-item__price');
-
-    console.log("ItemLink Length: " + itemlink.length);
-    console.log("ItemPrice Length: " + itemprice.length);
-
-    for (var i = 0; i < itemlink.length; i++) {
-      var href = itemlink[i].getAttribute('href');
-      hrefArray.push(href);
-    }
-
-    for (var i = 0; i < itemprice.length; i++) {
-      var value = itemprice[i].textContent;
-      priceArray.push(value);
-    }}).catch(error => {console.log('Error:', error);});
-
-
-  for (let i = 0; i < priceArray.length; i++) {
-    var temp = priceArray[i];
-    console.log(temp);
-  }
-
-  for (let i = 0; i < hrefArray.length; i++) {
-    var temp = hrefArray[i];
-    console.log(temp);
-  }
-
   console.log("New Url: "+ newUrl);
-  // console.log(hrefArray);
-  // console.log(priceArray);
+
+  addItemToStorage(newUrl);
   
 });
 
-function addItemToStorage(item) { 
-  var itemList = null
+function addItemToStorage(item) {
+  var Array = [];
 
-  chrome.storage.local.get(['items'], function(result) {
-    if (result.items === undefined) {
-      result.items = [];
-    }
-    console.log('List currently is ' + JSON.stringify(result.items));
+  // Check if storage array exists in local storage
+  var storedArray = localStorage.getItem('Array');
+  if (storedArray) {
+    // Parse the stored array if it exists
+    Array = JSON.parse(storedArray);
+    
+    // Append the item to the cloud storage array
+    Array.push(item);
 
-    itemList = result.items
-    itemList.push(item)
+    // Store the updated array in local storage
+    localStorage.setItem('Array', JSON.stringify(Array));
+  }
+  else{
+    localStorage.setItem('Array',JSON.stringify([]))
+  }
 
-    chrome.storage.local.set({items: itemList}, function() {
-      console.log('Items updated');
-    });
-
-  });
+  console.log(localStorage.getItem('Array'));
 }
 
 // actual check items function, below this function is the loop that runs it
