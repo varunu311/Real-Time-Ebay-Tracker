@@ -1,49 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+    <style>
+      body{
+        background-color:rgb(16, 52, 66);
+        width: 300px;
+        height: 300px;
+        display: grid;
+        font-family: Arial, sans-serif;
+      }
+      p{
+        background-color: rgb(255, 255, 255);
+        padding: 5px;
+        border-radius: 5px;
+        max-width: 490px;
+        size: 5px;
+      }
+      button{
+        margin-top: 5px;
+        border-radius: 20px;
+        background-color: rgb(99, 144, 160);
+        border-color: rgb(99, 144, 160);
+        transition: .25s;
+        color: rgb(40, 40, 40);
+      }
 
-<head>
-    <link rel="stylesheet" href="popup.css">
-    <title>eBay New Listing Finder</title>
-</head>
+      button:hover{
+        margin-top: 5px;
+        border-radius: 20px;
+        background-color: rgb(254, 254, 254);
+        border-color: rgb(99, 144, 160);
+        transition: .25s;
+      }
 
-<body>
+      h1{
+        color: rgb(255, 255, 255);
+        text-align: center;
+      }
 
-<!-- header -->
-<h1>eBay New Listing Finder</h1>
+      input{
+        border-radius: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        background-color: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        padding-left: 10px;
 
-<!-- begin form -->
-<div id="inputs">
+      }
 
-    <!-- item search -->
-    <div class="tooltip">
-        <label for="search_term">Item search:</label><br>
-        <input type="text" id="search_term" name="search_term" placeholder="Search for your item" required><br>
-        <span class="tooltiptext">type the important words, put exact words in quotes: airpods, "apple watch"</span>
-    </div>
+      input::placeholder{
+        color:rgb(98, 98, 98);
+      }
 
-    <!-- exlusion search -->
-    <div class="tooltip">
-        <label for="search_exclude_term">None of these words:</label><br>
-        <input type="text" id="search_exclude_term" name="search_exclude_term" placeholder="Exlude these words" required><br>
-        <span class="tooltiptext">put a minus sign before words you don't want: -poster, -case</span>
-    </div>
+      input:focus{
+        background-color: rgb(255, 255, 255);
+        color:rgb(61, 61, 61);
+      }
 
-    <!-- max price -->
-    <div class="tooltip">
-        <label for="search_term_maxprice">Maximum price:</label><br>
-        <input type="number" id="search_term_maxprice" name="search_term_maxprice" min="0.01" step="0.01" value="0.01" required><br>
-        <span class="tooltiptext">enter your maximum price</span>
-    </div>
+      a{
+        text-decoration: none;
+        color: rgb(255, 255, 255);
+        margin: 5px;
+        display: block;
+        background-color: rgb(47, 92, 107);
+        border-radius: 5px;
+        padding: 5px;
+      }
 
-    <!-- buttons -->
-    <br><button id="searchButton">Search</button>
+      a:hover{
+        text-decoration: none;
+        color: rgb(255, 255, 255);
+        margin: 5px;
+        display: block;
+        background-color: rgb(92, 146, 164);
+        border-radius: 5px;
+        padding: 5px; 
+      }
+
+      h2{
+        color:white;
+        border-radius: 20px;
+        border-color: white;
+        border-width: 3px;
+        border-style: solid;
+        padding: 5px;
+        text-align: center;
+        display: block;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+      }
+
+      label{
+        color: white;
+        size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ebay Live</h1>
+
+
+    <label for="search_term">Item: </label>
+    <input type="text" id="search_term" name="search_term" placeholder="Key Words">
+    
+    <label for="search_exclude_term">Excluded Words: </label>
+    <input type="text" id="search_exclude_term" name="search_exclude_term" placeholder="Excluded Word">
+    
+    <label for="search_term_maxprice">Max Price: </label>
+    <input type="text" id="search_term_maxprice" name="search_term_maxprice" placeholder="Max Price">
+
+    <button id="searchButton">Filter</button>
     <button id="refreshButton">Refresh</button>
     <button id="clearButton">Clear</button>
+    
 
-</div>
+    <div class="results" id="results"></div>
 
-<div class="results" id="results"></div>
-
-<script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>
