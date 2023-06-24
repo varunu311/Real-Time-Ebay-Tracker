@@ -10,7 +10,7 @@
         font-family: Arial, sans-serif;
       }
       p{
-        background-color: rgb(169, 168, 168);
+        background-color: rgb(255, 255, 255);
         padding: 5px;
         border-radius: 5px;
         max-width: 490px;
@@ -62,11 +62,9 @@
         color: rgb(255, 255, 255);
         margin: 5px;
         display: block;
-        background-color: rgb(144, 193, 209);
+        background-color: rgb(47, 92, 107);
         border-radius: 5px;
         padding: 5px;
-        transition: .25s;
-
       }
 
       a:hover{
@@ -74,37 +72,45 @@
         color: rgb(255, 255, 255);
         margin: 5px;
         display: block;
-        background-color: rgb(102, 142, 156);
+        background-color: rgb(92, 146, 164);
         border-radius: 5px;
-        padding: 5px;
-        transition: .25s;
-
+        padding: 5px; 
       }
 
       h2{
-        display: block;
-        text-align: center;
-        padding: 5px;
-        border-radius: 10px;
         color:white;
-        margin-bottom: 0px;
+        border-radius: 20px;
         border-color: white;
         border-width: 3px;
         border-style: solid;
-
+        padding: 5px;
+        text-align: center;
+        display: block;
         border-bottom: none;
+        border-left: none;
+        border-right: none;
       }
 
+      label{
+        color: white;
+        size: 16px;
+      }
     </style>
   </head>
   <body>
-    <h1>eBay</h1>
+    <h1>ebay Live</h1>
 
-    <input type="text" id="search_term" name="search_term" placeholder="Search Item">
+
+    <label for="search_term">Item: </label>
+    <input type="text" id="search_term" name="search_term" placeholder="Key Words">
+    
+    <label for="search_exclude_term">Excluded Words: </label>
     <input type="text" id="search_exclude_term" name="search_exclude_term" placeholder="Excluded Word">
+    
+    <label for="search_term_maxprice">Max Price: </label>
     <input type="text" id="search_term_maxprice" name="search_term_maxprice" placeholder="Max Price">
 
-    <button id="searchButton">Search</button>
+    <button id="searchButton">Filter</button>
     <button id="refreshButton">Refresh</button>
     <button id="clearButton">Clear</button>
     
